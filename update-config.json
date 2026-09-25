@@ -1,0 +1,4 @@
+{
+  "manifestUrl": "",
+  "notes": "Isi manifestUrl dengan URL update.json milik repository/release KASER PRINTING. Format manifest: {\"version\":\"5.0.4\",\"url\":\"https://.../Kaser-PDF-Calculator-Setup-5.0.4.exe\",\"filename\":\"Kaser-PDF-Calculator-Setup-5.0.4.exe\",\"notes\":\"...\"}"
+}

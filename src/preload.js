@@ -1,0 +1,25 @@
+const { contextBridge, ipcRenderer } = require('electron');
+contextBridge.exposeInMainWorld('kaser', {
+  pickPdf: () => ipcRenderer.invoke('pick-pdf'),
+  pickLogo: () => ipcRenderer.invoke('pick-logo'),
+  saveLogo: p => ipcRenderer.invoke('save-logo', p),
+  pickUpdate: () => ipcRenderer.invoke('pick-update'),
+  checkUpdate: () => ipcRenderer.invoke('check-update'),
+  downloadUpdate: (url, filename) => ipcRenderer.invoke('download-update', { url, filename }),
+  launchUpdate: p => ipcRenderer.invoke('launch-update', { path: p }),
+  savePng: (filename, data) => ipcRenderer.invoke('save-png', { filename, data }),
+  chooseFolder: () => ipcRenderer.invoke('choose-folder'),
+  writeFile: (dir, filename, data) => ipcRenderer.invoke('write-file', { dir, filename, data }),
+  readFile: p => ipcRenderer.invoke('read-file', p),
+  copy: text => ipcRenderer.invoke('copy', text),
+  openFolder: p => ipcRenderer.invoke('open-folder', p),
+  info: () => ipcRenderer.invoke('app-info'),
+  getSettings: () => ipcRenderer.invoke('get-settings'),
+  saveSettings: s => ipcRenderer.invoke('save-settings', s),
+  createTransaction: d => ipcRenderer.invoke('create-transaction', d),
+  getInvoice: inv => ipcRenderer.invoke('get-invoice', inv),
+  getHistory: q => ipcRenderer.invoke('get-history', q),
+  backup: () => ipcRenderer.invoke('backup-data'),
+  printPdf: filePath => ipcRenderer.invoke('print-pdf-native', filePath),
+  close: () => ipcRenderer.invoke('close-app')
+});

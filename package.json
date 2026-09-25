@@ -1,0 +1,52 @@
+{
+  "name": "kaser-pdf-calculator",
+  "version": "5.0.20",
+  "description": "Kaser Printing PDF Calculator — Electron Only",
+  "main": "src/main.js",
+  "author": "KASER PRINTING",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "build:win": "electron-builder --win nsis",
+    "build:portable": "electron-builder --win portable -c.artifactName=Kaser-PDF-Calculator-Portable-${version}.${ext}"
+  },
+  "build": {
+    "appId": "com.kaserprinting.pdfcalculator",
+    "productName": "Kaser Printing PDF Calculator",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "package.json",
+      "update-config.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Kaser Printing PDF Calculator",
+      "perMachine": false,
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
+    },
+    "icon": "build/icon.ico"
+  },
+  "devDependencies": {
+    "electron": "^38.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^5.4.149",
+    "pdf-lib": "^1.17.1"
+  }
+}

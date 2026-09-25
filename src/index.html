@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kaser Printing PDF Calculator</title>
+<style>
+:root{--bg:#0f1117;--panel:#171a22;--panel2:#1d212b;--line:#2a2f3b;--text:#eef1f6;--muted:#8e97a8;--accent:#665cff;--accent2:#ff4f75;--green:#18b979;--amber:#d69a23;--danger:#e34b63;}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;height:100vh;overflow:hidden}button,input{font:inherit}button{border:0;cursor:pointer;color:var(--text)}
+.app{display:grid;grid-template-columns:360px 1fr;height:100vh}.sidebar{background:#151821;border-right:1px solid var(--line);overflow:auto;padding:20px}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#665cff,#ff4f75);display:grid;place-items:center;font-size:21px}.brand h1{font-size:18px;margin:0}.brand small{color:var(--muted)}
+.section{border:1px solid var(--line);background:rgba(255,255,255,.018);border-radius:14px;padding:13px;margin-bottom:12px}.section h3{font-size:12px;color:#aab2c2;text-transform:uppercase;letter-spacing:.07em;margin:0 0 10px}.row{display:flex;gap:8px}.field{display:flex;flex-direction:column;gap:5px;flex:1}.field label{font-size:11px;color:var(--muted)}input{width:100%;background:#10131a;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:9px 10px;outline:none}input:focus{border-color:#6d65ff}.range{width:100%}
+.btn{padding:9px 11px;border-radius:9px;background:#292e3a;font-weight:600}.btn:hover{filter:brightness(1.1)}.btn.primary{background:var(--accent)}.btn.pink{background:var(--accent2)}.btn.green{background:var(--green)}.btn.amber{background:#a97013}.btn.purple{background:#7655c9}.btn.full{width:100%;margin-top:8px}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.active-mode{box-shadow:0 0 0 2px rgba(102,92,255,.55) inset;filter:brightness(1.12)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.actions .purple{background:#7655c9}.actions .wide{grid-column:1/-1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{background:#11141b;border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center}.stat span{display:block;color:var(--muted);font-size:10px}.stat b{font-size:16px;display:block;margin-top:3px}.log{height:100px;overflow:auto;background:#0d1016;border:1px solid var(--line);border-radius:9px;padding:9px;font-size:11px;white-space:pre-wrap;color:#aeb6c5;margin-top:8px}
+.main{display:flex;flex-direction:column;min-width:0;min-height:0;position:relative;overflow:hidden}.top{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 16px}.top .spacer{flex:1}.pill{font-size:11px;color:#aeb6c5;background:#1b1f29;border:1px solid var(--line);padding:6px 9px;border-radius:999px}.previewbar{display:flex;align-items:center;gap:7px;padding:10px 16px;border-bottom:1px solid var(--line)}.previewbar .spacer{flex:1}.selectbtn{padding:8px 10px;border-radius:8px;background:#242936;color:#cdd3df}.selectbtn.active{background:var(--accent)}
+.viewer{flex:1 1 auto;min-height:0;min-width:0;background:#0b0d12;display:grid;place-items:center;overflow:auto;padding:24px 24px 76px;box-sizing:border-box}.paper-wrap{display:flex;align-items:center;justify-content:center;min-width:100%;min-height:100%;box-sizing:border-box}.paper{max-width:none;box-shadow:0 14px 50px rgba(0,0,0,.55);background:white;transition:width .15s ease}.empty{color:#667083;text-align:center}.empty strong{display:block;color:#aab2c2;font-size:17px;margin-bottom:6px}.bottom{position:absolute;left:0;right:0;bottom:0;height:62px;box-sizing:border-box;border-top:1px solid var(--line);padding:9px 16px;display:flex;align-items:center;gap:8px;background:#10131a;z-index:100;isolation:isolate}.bottom .spacer{flex:1}.bottom .btn{flex:0 0 auto;white-space:nowrap}.status{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42%}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:50}.modal-bg.show{display:flex}.modal{width:min(960px,92vw);max-height:86vh;overflow:auto;background:#171a22;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 30px 100px rgba(0,0,0,.6)}.modal h2{margin:0 0 14px;font-size:19px}.modal-head{display:flex;align-items:center}.modal-head .spacer{flex:1}.close{background:#252a35;width:32px;height:32px;border-radius:8px}.table{width:100%;border-collapse:collapse;font-size:12px}.table th,.table td{border-bottom:1px solid var(--line);padding:9px;text-align:left}.table th{color:#929bad;font-weight:600}.notice{padding:10px 12px;border-radius:10px;background:#11151c;color:#aab3c3;font-size:12px;margin-top:10px}
+@media(max-width:1100px){.app{grid-template-columns:310px 1fr}.sidebar{padding:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">📄</div><div><h1>PDF Print Calculator</h1><small>KASER PRINTING • Electron</small></div></div>
+    <div class="section">
+      <h3>Pengaturan Harga</h3>
+      <div class="row"><div class="field"><label>Hitam Putih / lembar</label><input id="priceBw" inputmode="numeric"></div><div class="field"><label>Warna / lembar</label><input id="priceColor" inputmode="numeric"></div></div>
+      <div class="field" style="margin-top:9px"><label>Sensitivitas warna: <b id="sensVal">5</b></label><input id="sensitivity" class="range" type="range" min="1" max="10" step="1"></div>
+    </div>
+    <div class="section">
+      <h3>File PDF</h3><button id="openPdf" class="btn primary full">📁 Pilih File PDF</button><div id="filename" class="notice">Belum ada file PDF.</div>
+      <div class="field" style="margin-top:9px"><label>Halaman yang dihitung</label><input id="pages" value="Semua" placeholder="Semua / 1-10,15,20-25"></div>
+      <button id="analyze" class="btn pink full" disabled>🚀 Analisis & Hitung Harga</button>
+    </div>
+    <div class="section">
+      <h3>Hasil Perhitungan</h3><div class="stats"><div class="stat"><span>🎨 Warna</span><b id="countColor">0</b></div><div class="stat"><span>⚫ BW</span><b id="countBw">0</b></div><div class="stat"><span>💰 Total</span><b id="total">Rp 0</b></div></div><div id="log" class="log">Detail hasil akan muncul di sini...</div>
+    </div>
+    <div class="section">
+      <h3>Data Nota</h3>
+      <div class="field"><label>Nama pelanggan</label><input id="customer" placeholder="Pelanggan"></div>
+      <div class="field" style="margin-top:7px"><label>No. WhatsApp</label><input id="phone" placeholder="Opsional"></div>
+      <div class="field" style="margin-top:7px"><label>Diskon</label><input id="discount" inputmode="numeric" placeholder="0"></div>
+      <div class="field" style="margin-top:7px"><label>Keterangan</label><input id="notes" placeholder="Opsional"></div>
+    </div>
+    <div class="section">
+      <h3>Aksi</h3><div class="actions"><button id="makeInvoice" class="btn primary wide" disabled>🧾 Buat Nota</button><button id="savePng" class="btn amber" disabled>🖼 Nota PNG</button><button id="copyWa" class="btn green" disabled>🟢 Copy WhatsApp</button><button id="printPdf" class="btn purple" disabled>📄 Print PDF</button><button id="splitPdf" class="btn amber wide" disabled>📑 Pisahkan PDF BW / Warna</button><button id="history" class="btn" >📋 Riwayat</button><button id="settings" class="btn">⚙ Pengaturan</button><button id="updateApp" class="btn green wide">🔄 Update Aplikasi</button></div>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="top"><span class="pill" id="filePages">0 halaman</span><span class="pill" id="invoicePill">Belum ada nota</span><span class="spacer"></span><span class="pill">v5.0.20 Electron</span></div>
+    <div class="previewbar"><span style="font-size:12px;color:#8e97a8">Filter:</span><button class="selectbtn active" id="filterAll">Semua</button><button class="selectbtn" id="filterColor">🎨 Warna</button><button class="selectbtn" id="filterBw">⚫ BW</button><span class="spacer"></span><button class="selectbtn" id="prev">◀</button><input id="goto" style="width:55px;text-align:center;padding:7px" placeholder="hal."><span id="pageInfo" class="pill">0 / 0</span><button class="selectbtn" id="go">GO</button><button class="selectbtn" id="next">▶</button><span style="width:10px"></span><button class="selectbtn" id="zoomOut">−</button><span id="zoomText" class="pill">100%</span><button class="selectbtn" id="zoomIn">+</button><button class="selectbtn" id="zoomFit">Fit</button></div>
+    <div class="viewer" id="viewer"><div class="empty"><strong>Preview PDF akan muncul di sini</strong>Pilih PDF di panel kiri untuk mulai.</div></div>
+    <div class="bottom"><button id="forceBw" class="btn" disabled>⚫ Jadikan BW</button><button id="forceColor" class="btn" disabled>🎨 Jadikan Warna</button><span class="spacer"></span><span id="status" class="status">Siap digunakan.</span></div>
+  </main>
+</div>
+
+<div id="modalBg" class="modal-bg"><div id="modal" class="modal"></div></div>
+<script type="module">
+const $=id=>document.getElementById(id); let pdfPath=null,pdfPageCount=0,results={},originalResults={},filtered=[],idx=0,zoom=1,lastInvoice=null,settings={},overrideMode='normal',PDFEngine=null,pdfEngineError=null;
+async function getPDFEngine(){if(PDFEngine)return PDFEngine;if(pdfEngineError)throw pdfEngineError;try{PDFEngine=(await import('./pdf-engine.js')).PDFEngine;return PDFEngine}catch(e){pdfEngineError=new Error('Engine PDF Electron gagal dimuat. Pastikan dependensi pdfjs-dist dan pdf-lib terpasang. Detail: '+(e?.message||e));throw pdfEngineError}}
+const rupiah=n=>'Rp '+Number(n||0).toLocaleString('id-ID'); const int=v=>parseInt(String(v||'0').replace(/[^0-9-]/g,''))||0; function setStatus(t){$('status').textContent=t} function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function enableInvoice(v){['makeInvoice','splitPdf'].forEach(id=>$(id).disabled=!v)} function enableInvoiceActions(v){['savePng','copyWa'].forEach(id=>$(id).disabled=!v)} function invalidateInvoice(){lastInvoice=null;$('invoicePill').textContent='Belum ada nota'}
+async function createInvoice(){const totals=recalc();const r=await kaser.createTransaction({customer:$('customer').value,phone:$('phone').value,filename:pdfPath?pdfPath.split(/[/\\]/).pop():'-',bw:totals.bw,warna:totals.warna,price_bw:int($('priceBw').value),price_warna:int($('priceColor').value),subtotal:totals.total,discount:int($('discount').value),paid:0,notes:$('notes').value});if(!r.ok){setStatus(r.error);return false}lastInvoice=r.invoice;$('invoicePill').textContent=r.invoice;enableInvoiceActions(true);return true}
+async function ensureInvoice(){return lastInvoice?true:await createInvoice()}
+function filteredPages(type='all'){const all=Array.from({length:pdfPageCount},(_,i)=>i);filtered=type==='all'?all:all.filter(i=>results[i]===type);idx=Math.min(idx,Math.max(0,filtered.length-1));renderPreview()}
+async function renderPreview(){if(!pdfPath||!filtered.length){$('viewer').innerHTML='<div class="empty"><strong>Tidak ada halaman</strong>Belum ada preview yang bisa ditampilkan.</div>';$('pageInfo').textContent='0 / 0';return}const p=filtered[idx];$('pageInfo').textContent=(idx+1)+' / '+filtered.length;$('goto').value=p+1;try{const engine=await getPDFEngine();const r=await engine.preview(pdfPath,p,1.5);$('viewer').innerHTML='<div class="paper-wrap"><img class="paper" id="paper" src="'+r.png+'"></div>';$('paper').style.width=Math.round(r.width*zoom)+'px';const st=results[p];$('forceBw').disabled=!st;$('forceColor').disabled=!st;setStatus(`Halaman ${p+1}${st?' • '+(st==='warna'?'WARNA':'HITAM PUTIH'):''}`)}catch(e){setStatus('Preview: '+e.message)}}
+function updateZoom(z){zoom=Math.max(.2,Math.min(2.5,z));$('zoomText').textContent=Math.round(zoom*100)+'%';const img=$('paper');if(img)img.style.width=Math.round(img.naturalWidth*zoom)+'px'}
+async function loadSettings(){const r=await kaser.getSettings();if(!r.ok){setStatus('Gagal memuat pengaturan: '+r.error);return}settings=r.settings;$('priceBw').value=settings.price_bw;$('priceColor').value=settings.price_warna;$('sensitivity').value=settings.sensitivity;$('sensVal').textContent=settings.sensitivity}
+async function savePriceSettings(){await kaser.saveSettings({price_bw:int($('priceBw').value),price_warna:int($('priceColor').value),sensitivity:$('sensitivity').value})}
+$('sensitivity').oninput=()=>{$('sensVal').textContent=$('sensitivity').value};$('sensitivity').onchange=savePriceSettings;$('priceBw').onchange=savePriceSettings;$('priceColor').onchange=savePriceSettings;['customer','phone','discount','notes'].forEach(id=>$(id).addEventListener('input',invalidateInvoice));
+$('openPdf').onclick=async()=>{const p=await kaser.pickPdf();if(!p)return;pdfPath=p;$('filename').textContent=p.split(/[/\\]/).pop();try{const engine=await getPDFEngine();const r=await engine.preview(p,0,1);pdfPageCount=r.pageCount;$('filePages').textContent=pdfPageCount+' halaman';$('analyze').disabled=false;$('printPdf').disabled=false;results={};originalResults={};overrideMode='normal';idx=0;filtered=Array.from({length:pdfPageCount},(_,i)=>i);$('pageInfo').textContent='1 / '+pdfPageCount;$('goto').value='1';$('viewer').innerHTML='<div class="paper-wrap"><img class="paper" id="paper" src="'+r.png+'"></div>';$('paper').style.width=Math.round(r.width*zoom)+'px';setStatus('File PDF dimuat. Klik Analisis & Hitung Harga.')}catch(e){setStatus('Gagal membuka PDF: '+e.message)}};
+$('analyze').onclick=async()=>{if(!pdfPath)return;await savePriceSettings();$('analyze').disabled=true;setStatus('Sedang menganalisis PDF di Electron...');try{const engine=await getPDFEngine();const r=await engine.analyze(pdfPath,$('pages').value,Number($('sensitivity').value),Number($('priceBw').value),Number($('priceColor').value));originalResults={};Object.entries(r.results).forEach(([k,v])=>originalResults[Number(k)]=v);results={...originalResults};overrideMode='normal';pdfPageCount=r.pageCount;$('countColor').textContent=r.warna;$('countBw').textContent=r.bw;$('total').textContent=rupiah(r.total);$('log').textContent=r.log;$('filePages').textContent=pdfPageCount+' halaman';enableInvoice(true);enableInvoiceActions(true);lastInvoice=null;$('invoicePill').textContent='Belum ada nota';filteredPages('all');updateOverrideButtons();setStatus(`Selesai! ${r.selected.length} halaman dihitung tanpa backend tambahan.`)}catch(e){setStatus('Analisis gagal: '+e.message)}$('analyze').disabled=false};
+function recalc(){let bw=0,c=0;Object.values(results).forEach(v=>v==='bw'?bw++:v==='warna'?c++:0);const total=bw*int($('priceBw').value)+c*int($('priceColor').value);$('countBw').textContent=bw;$('countColor').textContent=c;$('total').textContent=rupiah(total);return{bw,warna:c,total}}
+function updateOverrideButtons(){const has=Object.keys(originalResults).length>0;$('forceBw').disabled=!has;$('forceColor').disabled=!has;$('forceBw').textContent=overrideMode==='bw'?'⚫ Semua Halaman = BW':'⚫ Jadikan BW';$('forceColor').textContent=overrideMode==='normal'?'🎨 Kembali Normal / Warna':'🎨 Kembali Normal / Warna';$('forceBw').classList.toggle('active-mode',overrideMode==='bw');$('forceColor').classList.toggle('active-mode',overrideMode==='normal')}
+function applyOverride(mode){if(!Object.keys(originalResults).length){setStatus('Analisis PDF terlebih dahulu.');return}if(mode==='bw'){overrideMode='bw';results={};Object.keys(originalResults).forEach(k=>results[Number(k)]='bw');recalc();filteredPages('all');updateOverrideButtons();setStatus(`Mode BW aktif: seluruh ${Object.keys(originalResults).length} halaman dihitung sebagai BW.`)}else{overrideMode='normal';results={...originalResults};recalc();filteredPages('all');updateOverrideButtons();setStatus('Mode normal aktif: hasil analisis BW/Warna dikembalikan.')}}
+['filterAll','filterColor','filterBw'].forEach(id=>$(id).onclick=()=>{['filterAll','filterColor','filterBw'].forEach(x=>$(x).classList.remove('active'));$(id).classList.add('active');filteredPages(id==='filterAll'?'all':id==='filterColor'?'warna':'bw')});$('prev').onclick=()=>{if(idx>0){idx--;renderPreview()}};$('next').onclick=()=>{if(idx<filtered.length-1){idx++;renderPreview()}};$('go').onclick=()=>{const p=int($('goto').value)-1,j=filtered.indexOf(p);if(j>=0){idx=j;renderPreview()}else setStatus('Halaman tidak ada pada filter aktif.')};$('goto').onkeydown=e=>{if(e.key==='Enter')$('go').click()};$('zoomOut').onclick=()=>updateZoom(zoom-.1);$('zoomIn').onclick=()=>updateZoom(zoom+.1);$('zoomFit').onclick=()=>updateZoom(.75);$('forceBw').onclick=()=>applyOverride('bw');$('forceColor').onclick=()=>applyOverride('normal');
+function canvasInvoice(d){const s=settings,W=440,margin=24,fs='15px Arial',fb='bold 22px Arial';const lines=[];function wrap(text,max){const words=String(text||'').split(/\s+/),out=[];let cur='';const c=document.createElement('canvas').getContext('2d');c.font=fs;for(const w of words){const t=(cur+' '+w).trim();if(c.measureText(t).width<=max||!cur)cur=t;else{out.push(cur);cur=w}}if(cur)out.push(cur);return out}let H=600+(d.notes?40:0)+(s.store_address?20:0)+(s.store_phone?20:0);const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);x.fillStyle='#111';x.textAlign='center';let y=22;x.font=fb;x.fillText(s.store_name||'KASER PRINTING',W/2,y);y+=30;x.font='13px Arial';for(const t of [s.store_address,s.store_phone])if(t){x.fillText(t,W/2,y);y+=18}x.font=fs;x.fillText('NOTA PENJUALAN',W/2,y);y+=25;x.textAlign='left';x.beginPath();x.moveTo(margin,y);x.lineTo(W-margin,y);x.stroke();y+=16;for(const [a,b] of [['Nama',d.customer],['Tanggal',new Date(d.created_at).toLocaleString('id-ID',{hour12:false})],['Nota',d.invoice],['File',d.filename]]){x.font=fs;x.fillText(a+':',margin,y);x.fillText(String(b||'-'),margin+75,y);y+=22}x.beginPath();x.moveTo(margin,y);x.lineTo(W-margin,y);x.stroke();y+=16;for(const [a,b] of [[`Hitam Putih x ${d.bw}`,rupiah(d.bw*d.price_bw)],[`Warna x ${d.warna}`,rupiah(d.warna*d.price_warna)],['Subtotal',rupiah(d.subtotal)],['Diskon',rupiah(d.discount)]]){x.textAlign='left';x.font=fs;x.fillText(a,margin,y);x.textAlign='right';x.fillText(b,W-margin,y);y+=22}x.textAlign='left';x.beginPath();x.moveTo(margin,y);x.lineTo(W-margin,y);x.stroke();y+=16;x.font=fb;x.fillText('TOTAL',margin,y);x.textAlign='right';x.fillText(rupiah(d.total),W-margin,y);y+=32;if(d.notes){x.textAlign='left';x.font=fs;x.fillText('Keterangan:',margin,y);y+=18;for(const l of wrap(d.notes,W-2*margin)){x.fillText(l,margin,y);y+=18}}y+=10;x.beginPath();x.moveTo(margin,y);x.lineTo(W-margin,y);x.stroke();y+=16;x.textAlign='center';x.font='13px Arial';for(const l of wrap(s.footer||'Terima kasih 🙏',W-2*margin)){x.fillText(l,W/2,y);y+=18}const out=document.createElement('canvas');out.width=W;out.height=Math.min(H,y+12);out.getContext('2d').drawImage(c,0,0);return out}
+$('makeInvoice').onclick=async()=>{if(await createInvoice()){const t=recalc();setStatus('Nota berhasil disimpan.');alert('Nota '+lastInvoice+' berhasil dibuat.\nTotal: '+rupiah(Math.max(0,t.total-int($('discount').value))))}};
+async function getInvoice(){if(!lastInvoice)return null;const r=await kaser.getInvoice(lastInvoice);if(!r.ok)return null;return r}
+$('savePng').onclick=async()=>{if(!await ensureInvoice())return;const r=await getInvoice();if(!r)return;const c=canvasInvoice(r.data);const p=await kaser.savePng(r.data.invoice+'.png',c.toDataURL('image/png').split(',')[1]);if(p){setStatus('Nota PNG disimpan.');kaser.openFolder(p)}};
+$('copyWa').onclick=async()=>{if(!await ensureInvoice())return;const r=await getInvoice();if(!r)return;await kaser.copy(r.text);setStatus('Teks nota sudah dicopy ke clipboard.')};$('printPdf').onclick=async()=>{if(!pdfPath)return;const x=await kaser.printPdf(pdfPath);setStatus(x.ok?'PDF dikirim ke printer/default PDF handler.':x.error)};
+$('splitPdf').onclick=async()=>{if(!pdfPath||!Object.keys(results).length)return;const dir=await kaser.chooseFolder();if(!dir)return;try{const engine=await getPDFEngine();const files=await engine.splitPdf(pdfPath,dir,results);alert('PDF berhasil dipisahkan:\n'+files.join('\n'));setStatus('PDF BW/Warna berhasil dipisahkan langsung di Electron.')}catch(e){setStatus('Pisahkan PDF gagal: '+e.message)}};
+function showModal(html){$('modal').innerHTML=html;$('modalBg').classList.add('show')}function closeModal(){$('modalBg').classList.remove('show')}window.closeModal=closeModal;$('modalBg').onclick=e=>{if(e.target.id==='modalBg')closeModal()};
+$('history').onclick=async()=>{showModal('<div class="modal-head"><h2>📋 Riwayat Transaksi</h2><span class="spacer"></span><button class="close" onclick="closeModal()">×</button></div><input id="historySearch" placeholder="Cari nota / pelanggan / file"><div id="historyBody" style="margin-top:12px">Memuat...</div>');const load=async()=>{const r=await kaser.getHistory($('historySearch').value);$('historyBody').innerHTML='<table class="table"><thead><tr><th>Nota</th><th>Tanggal</th><th>Pelanggan</th><th>File</th><th>BW</th><th>Warna</th><th>Total</th><th>Bayar</th></tr></thead><tbody>'+r.rows.map(x=>`<tr><td>${esc(x.invoice)}</td><td>${esc(x.created_at)}</td><td>${esc(x.customer)}</td><td>${esc(x.filename)}</td><td>${x.bw}</td><td>${x.warna}</td><td>${rupiah(x.total)}</td><td>${rupiah(x.paid)}</td></tr>`).join('')+'</tbody></table>'};$('historySearch').oninput=load;load()};
+async function openSettings(){
+  try{
+    const r=await kaser.getSettings();
+    if(!r.ok) throw new Error(r.error||'Gagal mengambil pengaturan');
+    const st=r.settings||{};
+    showModal(`<div class="modal-head"><h2>⚙ Pengaturan Toko</h2><span class="spacer"></span><button class="close" onclick="closeModal()">×</button></div>
+    <div class="field"><label>Logo toko</label><div class="row"><button id="pickLogo" class="btn">🖼 Pilih Logo</button><input id="setLogoPath" value="${esc(st.logo_path||'')}" readonly placeholder="Belum ada logo"></div></div>
+    <div class="field" style="margin-top:9px"><label>Nama toko</label><input id="setName" value="${esc(st.store_name||'')}"></div>
+    <div class="field" style="margin-top:9px"><label>Alamat toko</label><input id="setAddress" value="${esc(st.store_address||'')}" placeholder="Alamat toko"></div>
+    <div class="field" style="margin-top:9px"><label>WhatsApp toko</label><input id="setPhone" value="${esc(st.store_phone||'')}"></div>
+    <div class="field" style="margin-top:9px"><label>Footer nota</label><input id="setFooter" value="${esc(st.footer||'')}"></div>
+    <div id="logoStatus" class="notice">${st.logo_path?'Logo tersimpan.':'Belum ada logo toko.'}</div>
+    <button id="saveSettings" class="btn primary full">💾 Simpan Pengaturan</button>
+    <button id="backup" class="btn full">💾 Backup Data Sekarang</button>
+    <button id="checkUpdate" class="btn green full">🔄 Cek Update Aplikasi</button>
+    <div id="updateStatus" class="notice" style="display:none"></div>
+    <div class="notice">Semua engine PDF berjalan di Electron. Semua engine PDF berjalan langsung di Electron.<br><br>Data transaksi dan pengaturan: %APPDATA%/KaserPrinting/PDFPrintCalculator/data.json<br><br>Versi aplikasi: v5.0.20 Electron Only</div>`);
+    $('pickLogo').onclick=async()=>{
+      const file=await kaser.pickLogo(); if(!file)return;
+      const saved=await kaser.saveLogo(file);
+      if(!saved.ok){$('logoStatus').textContent='Gagal menyimpan logo: '+saved.error;return;}
+      $('setLogoPath').value=saved.path; $('logoStatus').textContent='Logo siap disimpan.';
+    };
+    $('saveSettings').onclick=async()=>{
+      const saved=await kaser.saveSettings({store_name:$('setName').value,store_address:$('setAddress').value,store_phone:$('setPhone').value,logo_path:$('setLogoPath').value,footer:$('setFooter').value});
+      if(!saved.ok){alert(saved.error||'Gagal menyimpan pengaturan');return;}
+      settings=saved.settings||settings; closeModal(); setStatus('Pengaturan toko tersimpan.');
+    };
+    $('backup').onclick=async()=>{const b=await kaser.backup();alert(b.path?'Backup berhasil dibuat:\n'+b.path:'Backup gagal.');};
+    $('checkUpdate').onclick=async()=>{
+      const box=$('updateStatus'); box.style.display='block'; box.textContent='Mengecek update...';
+      const u=await kaser.checkUpdate();
+      if(!u.ok){box.textContent=u.configured===false?'Update online belum dikonfigurasi.':'Gagal cek update: '+u.error;return;}
+      if(!u.updateAvailable){box.textContent='Aplikasi sudah versi terbaru (v'+u.version+').';return;}
+      box.innerHTML='<b>Update tersedia: v'+esc(u.latest)+'</b><br>'+esc(u.notes||'')+'<br><button id="downloadUpdate" class="btn green full">⬇ Download & Pasang Update</button>';
+      $('downloadUpdate').onclick=async()=>{
+        box.textContent='Mengunduh update...';
+        const d=await kaser.downloadUpdate(u.url,u.filename);
+        if(!d.ok){box.textContent='Download gagal: '+d.error;return;}
+        box.textContent='Download selesai. Menjalankan installer...';
+        const l=await kaser.launchUpdate(d.path);
+        if(!l.ok)box.textContent='Gagal menjalankan installer: '+l.error;
+      };
+    };
+  }catch(e){console.error(e);setStatus('Pengaturan: '+e.message);alert('Pengaturan gagal dibuka: '+e.message)}
+}
+$('settings').onclick=openSettings;
+$('updateApp').onclick=openSettings;
+
+window.addEventListener('error',e=>{console.error(e.error||e.message);setStatus('Error: '+(e.message||'Terjadi kesalahan'))});window.addEventListener('unhandledrejection',e=>{console.error(e.reason);setStatus('Error: '+(e.reason?.message||e.reason||'Terjadi kesalahan'))});(async()=>{const info=await kaser.info();await loadSettings();setStatus('Siap digunakan • Electron Only • tanpa backend tambahan')})();
+</script>
+</body></html>
