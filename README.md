@@ -1,4 +1,4 @@
-# Kaser Printing PDF Calculator v5.0.13 — ELECTRON ONLY
+# # Kaser Printing PDF Calculator v5.0.20 — ELECTRON ONLY
 
 Versi ini **tidak menggunakan Python, PyInstaller, backend.py, atau executable backend**. Seluruh engine PDF berjalan di sisi Electron/Chromium menggunakan `pdfjs-dist` dan `pdf-lib`.
 
